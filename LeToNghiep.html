@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lời Mời Lễ Tốt Nghiệp - Huỳnh Tiến Hiểu</title>
-    <meta property="og:title" content="Lời Mời Lễ Tốt Nghiệp - Huỳnh Tiến Hiểu" />
+    <meta
+      property="og:title"
+      content="Lời Mời Lễ Tốt Nghiệp - Huỳnh Tiến Hiểu"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700;800&display=swap"
       rel="stylesheet"
@@ -31,14 +34,23 @@
 
       body {
         font-family: "Nunito", sans-serif;
-        min-height: 100vh;
+        min-height: 100svh;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: safe center;
         background: linear-gradient(135deg, #f0f4f8 0%, #dbe9f6 100%);
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
         position: relative;
         perspective: 1500px; /* Tăng không gian 3D để lật thiệp mượt hơn */
+      }
+
+      #petals {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
       }
 
       /* Hạt bóng bay nền */
@@ -312,6 +324,15 @@
         .floating-photo {
           border-width: 3px;
           border-radius: 12px;
+        }
+      }
+
+      @media (max-height: 760px) and (min-width: 901px) {
+        body {
+          height: auto;
+          min-height: 100svh;
+          align-items: flex-start;
+          padding: 18px 0 54px;
         }
       }
 
@@ -1030,7 +1051,6 @@
     </style>
   </head>
   <body>
-  
     <div id="petals"></div>
 
     <div class="card-container" id="card-container">
@@ -1040,7 +1060,10 @@
 
           <div class="card-body">
             <div>
-              <h1>Trân Trọng Kính Mời</h1>
+              <h1>
+                Trân Trọng <br />
+                Kính Mời
+              </h1>
               <div class="divider"><span>✦</span></div>
               <p class="sub-title">Lễ Tốt Nghiệp Đại Học</p>
               <br />
@@ -1525,6 +1548,20 @@
           console.error(err);
         }
       }
+
+      document
+        .getElementById("guest-name")
+        .addEventListener("keydown", function (event) {
+          if (event.key !== "Enter") {
+            return;
+          }
+
+          event.preventDefault();
+          const btnConfirm = document.getElementById("btn-confirm");
+          if (!btnConfirm.disabled) {
+            submitAttendance();
+          }
+        });
 
       /* Quản lý nhạc nền */
       const music = document.getElementById("bg-music");
