@@ -13,6 +13,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="./attendance-guard.js"></script>
 
     <style>
       *,
@@ -1493,6 +1494,13 @@
               document.getElementById("guest-name").focus();
             },
           );
+          return;
+        }
+
+        if (
+          window.attendanceGuard &&
+          !window.attendanceGuard.canSubmit(name)
+        ) {
           return;
         }
 
