@@ -18,6 +18,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="./attendance-guard.js"></script>
+    <script src="./attendance-state.js"></script>
 
     <style>
       *,
@@ -772,28 +773,42 @@
         animation: noticePop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
       }
 
+      .photo-viewer-stage {
+        position: relative;
+        width: 100%;
+        height: min(72vh, 560px);
+        background: #edf5ff;
+        overflow: hidden;
+      }
+
       .photo-viewer-image {
         width: 100%;
-        max-height: 72vh;
+        height: 100%;
         object-fit: contain;
         display: block;
-        background: #edf5ff;
       }
 
       .photo-viewer-image.rotate-landscape {
-        width: auto;
-        height: min(72vh, 92vw);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(72vh, 560px);
+        height: min(92vw, 760px);
         max-width: none;
-        margin: 0 auto;
-        transform: rotate(-90deg);
+        transform: translate(-50%, -50%) rotate(-90deg);
       }
 
       .photo-viewer-controls {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(88px, 1fr) 80px minmax(88px, 1fr) minmax(88px, 1fr);
         align-items: center;
-        justify-content: space-between;
         gap: 10px;
         padding: 12px;
+      }
+
+      .photo-viewer-controls .btn {
+        width: 100%;
+        min-width: 0;
       }
 
       .photo-viewer-count {
@@ -1001,12 +1016,13 @@
         }
 
         .photo-viewer-controls {
-          flex-wrap: wrap;
+          grid-template-columns: minmax(74px, 1fr) 56px minmax(74px, 1fr) minmax(74px, 1fr);
+          gap: 8px;
         }
 
         .photo-viewer-controls .btn {
-          flex: 1;
-          min-width: 90px;
+          min-width: 0;
+          padding-inline: 8px;
         }
       }
 
@@ -1340,11 +1356,13 @@
 
     <div id="photo-viewer" class="photo-viewer hidden">
       <div class="photo-viewer-box" role="dialog" aria-modal="true">
-        <img
+        <div class="photo-viewer-stage">
+          <img
           class="photo-viewer-image"
           id="photo-viewer-image"
           alt="Ảnh tốt nghiệp"
-        />
+          />
+        </div>
         <div class="photo-viewer-controls">
           <button class="btn btn-no" onclick="prevPhoto()">Trước</button>
           <div class="photo-viewer-count" id="photo-viewer-count">1/1</div>
@@ -1497,6 +1515,17 @@
 
       /* Chuyển sang phần nhập tên */
       function goToInput() {
+        if (window.attendanceState && window.attendanceState.hasSubmitted()) {
+          const submission = window.attendanceState.getSubmission();
+          window.attendanceState.showSubmittedScreen(submission.name);
+          showNotice(
+            `Bạn đã xác nhận tham dự với tên ${submission.name} rồi nha!`,
+            "Đã ghi nhận trước đó",
+            "💙",
+          );
+          return;
+        }
+
         const screenStart = document.getElementById("screen-start");
         const inputSection = document.getElementById("input-section");
         const externalPhotos = document.getElementById("external-photos");
@@ -1614,8 +1643,33 @@
           ) {
             throw new Error("Missing URL");
           }
-          const url = `${APPS_SCRIPT_URL}?name=${encodeURIComponent(name)}`;
-          await fetch(url, { method: "GET", mode: "no-cors" });
+          let remoteResult = { ok: true, unchecked: true };
+          if (window.attendanceState) {
+            remoteResult = await window.attendanceState.submitRemote(
+              APPS_SCRIPT_URL,
+              name,
+            );
+          }
+
+          if (remoteResult.duplicate) {
+            if (window.attendanceState) {
+              window.attendanceState.saveSubmission(remoteResult.name || name);
+            }
+            document.getElementById("display-name").innerText =
+              remoteResult.name || name;
+            document.getElementById("input-section").classList.add("hidden");
+            document.getElementById("success-msg").classList.remove("hidden");
+            showNotice(
+              "Tên này đã được ghi nhận trong danh sách rồi nha!",
+              "Đã xác nhận trước đó",
+              "💙",
+            );
+            return;
+          }
+
+          if (window.attendanceState) {
+            window.attendanceState.saveSubmission(remoteResult.name || name);
+          }
 
           // Ẩn form nhập, hiện thành công
           document.getElementById("input-section").classList.add("hidden");
