@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230056b3'/%3E%3Cpath d='M8 24 32 12l24 12-24 12L8 24Z' fill='%23fff'/%3E%3Cpath d='M20 31v10c0 4 5.4 7 12 7s12-3 12-7V31l-12 6-12-6Z' fill='%23dbe9f6'/%3E%3Cpath d='M50 27v14' stroke='%23ffd166' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='45' r='4' fill='%23ffd166'/%3E%3C/svg%3E"
+    />
     <title>Lời Mời Lễ Tốt Nghiệp - Huỳnh Tiến Hiểu</title>
     <meta
       property="og:title"
@@ -776,6 +780,14 @@
         background: #edf5ff;
       }
 
+      .photo-viewer-image.rotate-landscape {
+        width: auto;
+        height: min(72vh, 92vw);
+        max-width: none;
+        margin: 0 auto;
+        transform: rotate(-90deg);
+      }
+
       .photo-viewer-controls {
         display: flex;
         align-items: center;
@@ -829,7 +841,7 @@
         body {
           align-items: flex-start;
           min-height: 100svh;
-          padding: 12px 0 76px;
+          padding: 24px 0 76px;
           overflow-x: hidden;
           overflow-y: auto;
         }
@@ -837,8 +849,35 @@
         .card-container {
           width: 94vw;
           max-width: 380px;
-          height: min(760px, calc(100svh - 96px));
-          min-height: 650px;
+          height: auto;
+          min-height: 0;
+        }
+
+        .card-flip,
+        .card-front,
+        .card-back {
+          position: relative;
+          height: auto;
+          min-height: auto;
+        }
+
+        .card-front,
+        .card-back {
+          min-height: calc(100svh - 100px);
+        }
+
+        .card-back {
+          position: absolute;
+          inset: 0;
+        }
+
+        .card-container.flipped .card-back {
+          position: relative;
+        }
+
+        .card-container.flipped .card-front {
+          position: absolute;
+          inset: 0;
         }
 
         .card-front,
@@ -982,8 +1021,35 @@
 
         .card-container {
           width: min(88vw, 430px);
-          height: min(760px, calc(100svh - 110px));
+          height: auto;
+          min-height: 0;
+        }
+
+        .card-flip,
+        .card-front,
+        .card-back {
+          position: relative;
+          height: auto;
+          min-height: auto;
+        }
+
+        .card-front,
+        .card-back {
           min-height: 680px;
+        }
+
+        .card-back {
+          position: absolute;
+          inset: 0;
+        }
+
+        .card-container.flipped .card-back {
+          position: relative;
+        }
+
+        .card-container.flipped .card-front {
+          position: absolute;
+          inset: 0;
         }
 
         .card-body {
@@ -1082,10 +1148,12 @@
             <div>
               <h1>
                 Trân Trọng <br />
-                Kính Mời
+                Kính Mời Bạn Tham Dự
               </h1>
               <div class="divider"><span>✦</span></div>
-              <p class="sub-title">Lễ Tốt Nghiệp Đại Học</p>
+              <p class="sub-title">
+                Lễ Tốt Nghiệp Đại Học Của <br />Huỳnh Tiến Hiểu
+              </p>
               <br />
               <p class="desc">
                 Hành trình 4 năm học tập và nỗ lực tại giảng đường Đại học đã
@@ -1124,7 +1192,7 @@
           <div class="card-body">
             <div id="screen-start">
               <p class="desc invite-line">
-                Kính mời bạn đến với Lễ tốt nghiệp của
+                Kính mời mọi người đến với Lễ tốt nghiệp của
               </p>
               <span class="highlight-name">Huỳnh Tiến Hiểu</span>
               <p class="desc" style="font-size: 0.95rem; color: #555">
@@ -1148,9 +1216,10 @@
               </div>
 
               <p class="desc" style="margin-bottom: 15px">
-                Mình rất mong bạn sẽ dành chút thời gian đến tham dự Lễ tốt
-                nghiệp và cùng chia sẻ niềm vui đặc biệt này với mình. Sự hiện
-                diện của bạn sẽ là niềm vinh hạnh nghĩa nhất của mình 🥰
+                Mình rất mong Anh / Chị / em / bạn bè sẽ dành chút thời gian đến
+                tham dự Lễ tốt nghiệp và cùng chia sẻ niềm vui đặc biệt này với
+                mình. Sự hiện diện của bạn sẽ là niềm vinh hạnh nghĩa nhất của
+                mình 🥰
               </p>
 
               <div
@@ -1294,6 +1363,12 @@
       const graduationPhotos = [
         "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh1.jpg",
         "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh2.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh2AnhTh%C6%B0.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh2MinhThu.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh1%20%284%29.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh1%20%283%29.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh1%20%282%29.jpg",
+        "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh1%20%281%29.jpg",
         "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Ảnh3.jpg",
         "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Ảnh4.jpg",
         "https://raw.githubusercontent.com/Huynhtienhieu1234/UploadAnh/main/anhtotnghiep/Anh5.jpg",
@@ -1371,8 +1446,13 @@
       let currentPhotoIndex = 0;
 
       function renderPhotoViewer() {
-        document.getElementById("photo-viewer-image").src =
-          graduationPhotos[currentPhotoIndex];
+        const currentPhoto = graduationPhotos[currentPhotoIndex];
+        const viewerImage = document.getElementById("photo-viewer-image");
+        viewerImage.src = currentPhoto;
+        viewerImage.classList.toggle(
+          "rotate-landscape",
+          currentPhoto.includes("Anh1%20%284%29.jpg"),
+        );
         document.getElementById("photo-viewer-count").innerText =
           `${currentPhotoIndex + 1}/${graduationPhotos.length}`;
       }
